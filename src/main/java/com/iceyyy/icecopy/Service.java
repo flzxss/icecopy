@@ -3,9 +3,11 @@ package com.iceyyy.icecopy;
 import java.io.File;
 
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.StrUtil;
 
 public class Service {
+	private static String[] exts = "java,js,jsp,xml,html".split(",");
 
 	public static void copy(String oldFolder, String newFolder) {
 		oldFolder = oldFolder.replace("\\", "/");
@@ -29,7 +31,14 @@ public class Service {
 				copy(oldFolderSub, newFolder, oldFileSub, newFileSub, baseOld, baseNew);
 			}
 		} else {
-			FileUtil.copy(oldFile, newFile, true);
+			if (exts.length == 0) {
+				FileUtil.copy(oldFile, newFile, true);
+			} else {
+				String ext = StrUtil.subAfter(oldFolder, ".", false);
+				if (ArrayUtil.contains(exts, ext)) {
+					FileUtil.copy(oldFile, newFile, true);
+				}
+			}
 		}
 	}
 
